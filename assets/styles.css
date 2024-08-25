@@ -1,0 +1,47 @@
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #D3D3D3;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.edit, .logout {
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.content {
+    padding: 50px;
+}
+
+p {
+    font-size: 18px;
+}
+
+.profile-image {
+    flex-shrink: 0;
+    padding: 50px;
+    margin-left: 50px;
+}
+
+.profile-image img {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+
