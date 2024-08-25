@@ -7,8 +7,8 @@ NATURAL JOIN roles
 ');
 $selectAllUsers->execute();
 
-if ($_SESSION['auth']['role_level'] < 50) { 
-    header('Location:profile.php?id='.$_SESSION['auth']['id_user']);
+if ($_SESSION['auth']['role_level'] < 50) {
+    header('Location:profile.php?id=' . $_SESSION['auth']['id_user']);
 }
 
 include($_SERVER['DOCUMENT_ROOT'] . '/MyCRUD/_blocks/doctype.php');

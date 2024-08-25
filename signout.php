@@ -3,29 +3,30 @@
 include($_SERVER['DOCUMENT_ROOT'] . '/MyCRUD/host.php');
 
 $id = $_GET['id'];
-if (isset($_POST['yes'])) {
-    var_dump($_SESSION);
-    if ($_SESSION['auth']['id_user'] == $id) {
+
+if ($_SESSION['auth']['id_user'] == $id) {
+    if (isset($_POST['yes'])) {
         $deleteMe = $db->prepare('DELETE FROM users
         WHERE id_user = ?
     ');
         $deleteMe->execute([$id]);
         unset($_SESSION['auth']);
-        
+
         // echo "<script language='javascript'>
         // document.location.replace('./login.php')
         // </script>";
 
         header('Location:login.php');
     }
-}
-
-if (isset($_POST['no'])) {
-    // echo "<script language='javascript'>
-    //     document.location.replace('./profile.php')
-    //     </script>";
-
-    header('Location:profile.php?id=' . $_SESSION['auth']['id_user']);
+    if (isset($_POST['no'])) {
+        // echo "<script language='javascript'>
+        //     document.location.replace('./profile.php')
+        //     </script>";
+    
+        header('Location:profile.php?id=' . $_SESSION['auth']['id_user']);
+    }
+}else{
+    header('Location:profile.php?id='.$_SESSION['auth']['id_user']);
 }
 
 include($_SERVER['DOCUMENT_ROOT'] . '/MyCRUD/_blocks/doctype.php');
