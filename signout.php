@@ -37,7 +37,7 @@ include($_SERVER['DOCUMENT_ROOT'] . '/MyCRUD/_blocks/doctype.php');
 
 <body>
     <div class="container">
-        <h1>Voulez-vous vous déinscrire ?</h1>
+        <h1>Voulez-vous vraiment vous désinscrire ?</h1>
         <form action="" method="POST">
 
             <input class="btn btn-success" type="submit" name="yes" value="Oui">

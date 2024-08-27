@@ -6,8 +6,8 @@ include($_SERVER['DOCUMENT_ROOT'] . '/MyCRUD/_blocks/doctype.php');
 
 $id = $_GET['id'];
 
-if($id != $_SESSION['auth']['id_user']){
-    header('Location:'.$_SERVER['PHP_SELF'].'?id='.$_SESSION['auth']['id_user']);
+if ($id != $_SESSION['auth']['id_user']) {
+    header('Location:' . $_SERVER['PHP_SELF'] . '?id=' . $_SESSION['auth']['id_user']);
 }
 
 $selectUser = $db->prepare('SELECT * FROM users
@@ -58,21 +58,35 @@ if (isset($_POST['editUser'])) {
     }
 
     if (isset($_FILES['fileUpload']) && is_uploaded_file($_FILES['fileUpload']['tmp_name'][0])) {
-        $destinationDir = 'imgs_profiles/' . $id ;
-        $destinationFile = $destinationDir . '/' . basename($_FILES['fileUpload']['name'][0]);
+        $extensions = ['.jpg', '.png', 'jpeg', '.ico', '.JPG', '.PNG', 'JPEG', '.ICO'];
+        $ext = strrchr($_FILES['fileUpload']['name'][0], '.');
 
-        // Crée le dossier utilisateur s'il n'existe pas
-        if (!file_exists($destinationDir)) {
-            mkdir($destinationDir, 0777, true);
-        }
-
-        // Déplace le fichier uploadé vers le répertoire de destination
-        if (move_uploaded_file($_FILES['fileUpload']['tmp_name'][0], $destinationFile)) {
-            // Met à jour le chemin de l'image dans la base de données
-            $updateImg = $db->prepare('UPDATE users SET user_img = ? WHERE id_user = ?');
-            $updateImg->execute([$destinationFile, $id]);
+        // Si l'extension est autorisé
+        if (in_array($ext, $extensions)) {
+            $SizeMax = 2 * 1000 * 1000;
+            //Si la taille est respecté
+            if ($_FILES['fileUpload']['size'][0] < $SizeMax) {
+                $destinationDir = 'imgs_profiles/' . $id;
+                $destinationFile = $destinationDir . '/' . basename($_FILES['fileUpload']['name'][0]);
+                // Crée le dossier utilisateur s'il n'existe pas
+                if (!file_exists($destinationDir)) {
+                    mkdir($destinationDir, 0777, true);
+                }
+                // Déplace le fichier uploadé vers le répertoire de destination
+                if (move_uploaded_file($_FILES['fileUpload']['tmp_name'][0], $destinationFile)) {
+                    // Met à jour le chemin de l'image dans la base de données
+                    $updateImg = $db->prepare('UPDATE users SET user_img = ? 
+                    WHERE id_user = ?
+                    ');
+                    $updateImg->execute([$destinationFile, $id]);
+                } else {
+                    $errors['fileUpload'] = "Erreur lors du déplacement du fichier.";
+                }
+            } else {
+                $errors['fileUpload'] = "Le fichier est trop volumineux. Taille maximale autorisée : 2 Mo.";
+            }
         } else {
-            $errors['fileUpload'] = "Erreur lors du déplacement du fichier.";
+            $errors['fileUpload'] = "Format d'image non autorisé. ";
         }
     }
 
